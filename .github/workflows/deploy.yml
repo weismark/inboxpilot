@@ -3,7 +3,7 @@ name: Deploy InboxPilot to Ubuntu Server
 on:
     push:
         branches:
-            - main
+            - master
 
 jobs:
     deploy:
