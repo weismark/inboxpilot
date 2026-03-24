@@ -1,0 +1,123 @@
+name: Deploy InboxPilot to Ubuntu Server
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            # ── Repo & build ───────────────────────────────────────────────────
+
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+
+            - name: Install frontend dependencies
+              run: npm ci
+              working-directory: frontend
+
+            - name: Build frontend
+              working-directory: frontend
+              env:
+                  NEXT_PUBLIC_BASE_PATH: /inboxpilot
+                  NEXT_PUBLIC_API_BASE_URL: "https://www.wisemancodes.com/inboxpilot/api"
+              run: npm run build
+
+            # ── Frontend deploy ────────────────────────────────────────────────
+
+            - name: Prepare frontend directory
+              uses: appleboy/ssh-action@v1.0.3
+              with:
+                  host: ${{ secrets.SERVER_HOST }}
+                  username: ${{ secrets.SERVER_USER }}
+                  key: ${{ secrets.SERVER_SSH_KEY }}
+                  script: |
+                      sudo mkdir -p /var/www/wisemancodes.com/html/inboxpilot
+                      sudo chown -R markow:markow /var/www/wisemancodes.com/html/inboxpilot
+                      sudo rm -rf /var/www/wisemancodes.com/html/inboxpilot/*
+
+            - name: Upload frontend build
+              uses: appleboy/scp-action@v0.1.4
+              with:
+                  host: ${{ secrets.SERVER_HOST }}
+                  username: ${{ secrets.SERVER_USER }}
+                  key: ${{ secrets.SERVER_SSH_KEY }}
+                  source: "frontend/out/**"
+                  target: "/var/www/wisemancodes.com/html/inboxpilot/"
+                  strip_components: 2
+
+            - name: Fix frontend permissions
+              uses: appleboy/ssh-action@v1.0.3
+              with:
+                  host: ${{ secrets.SERVER_HOST }}
+                  username: ${{ secrets.SERVER_USER }}
+                  key: ${{ secrets.SERVER_SSH_KEY }}
+                  script: |
+                      sudo chown -R www-data:www-data /var/www/wisemancodes.com/html/inboxpilot
+                      sudo find /var/www/wisemancodes.com/html/inboxpilot -type d -exec chmod 755 {} \;
+                      sudo find /var/www/wisemancodes.com/html/inboxpilot -type f -exec chmod 644 {} \;
+                      sudo systemctl reload nginx
+
+            # ── Backend deploy ─────────────────────────────────────────────────
+
+            - name: Upload backend code
+              uses: appleboy/scp-action@v0.1.4
+              with:
+                  host: ${{ secrets.SERVER_HOST }}
+                  username: ${{ secrets.SERVER_USER }}
+                  key: ${{ secrets.SERVER_SSH_KEY }}
+                  source: "backend/**"
+                  target: "/var/www/wisemancodes.com/Inboxpilot/backend/"
+                  strip_components: 1
+
+            - name: Deploy and restart backend
+              uses: appleboy/ssh-action@v1.0.3
+              with:
+                  host: ${{ secrets.SERVER_HOST }}
+                  username: ${{ secrets.SERVER_USER }}
+                  key: ${{ secrets.SERVER_SSH_KEY }}
+                  script: |
+                      set -e
+                      cd /var/www/wisemancodes.com/Inboxpilot/backend
+
+                      echo "Writing .env..."
+                      echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" > .env
+                      echo "OPENAI_MODEL=gpt-5-nano" >> .env
+                      echo "ALLOWED_ORIGINS=https://www.wisemancodes.com" >> .env
+
+                      if [ ! -d "venv" ]; then
+                        echo "Creating Python virtual environment..."
+                        python3 -m venv venv
+                      fi
+
+                      source venv/bin/activate
+                      pip install --upgrade pip --quiet
+                      pip install -r requirements.txt --quiet
+
+                      chmod +x start.sh
+
+                      echo "Restarting InboxPilot backend..."
+                      pm2 delete inboxpilot-api || true
+                      pm2 start ./start.sh --name inboxpilot-api
+                      pm2 save
+                      pm2 list
+
+            # ── Health check ───────────────────────────────────────────────────
+
+            - name: Health check
+              uses: appleboy/ssh-action@v1.0.3
+              with:
+                  host: ${{ secrets.SERVER_HOST }}
+                  username: ${{ secrets.SERVER_USER }}
+                  key: ${{ secrets.SERVER_SSH_KEY }}
+                  script: |
+                      echo "Checking /inboxpilot/api/health ..."
+                      curl -sf https://www.wisemancodes.com/inboxpilot/api/health || true
