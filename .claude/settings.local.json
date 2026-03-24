@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p c:/Projects/inboxpilot/backend/agents c:/Projects/inboxpilot/backend/models c:/Projects/inboxpilot/backend/routers)",
+      "Bash(mkdir -p c:/Projects/inboxpilot/frontend/app/how-it-works c:/Projects/inboxpilot/frontend/components/InputPanel c:/Projects/inboxpilot/frontend/components/ResultPanel c:/Projects/inboxpilot/frontend/components/AgentTrace c:/Projects/inboxpilot/frontend/components/CopyButton c:/Projects/inboxpilot/frontend/lib c:/Projects/inboxpilot/frontend/public)",
+      "Bash(python -m venv venv)"
+    ]
+  }
+}

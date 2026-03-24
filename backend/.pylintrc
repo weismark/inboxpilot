@@ -1,0 +1,14 @@
+[MASTER]
+# Lisää backend/ hakemisto sys.pathiin, jotta paikalliset importit toimivat.
+init-hook='import sys; sys.path.insert(0, ".")'
+
+[FORMAT]
+max-line-length=100
+
+[DESIGN]
+# _build_response ja run_draft_agent vaativat enemmän argumentteja
+# pipeline-datan välittämiseen — nostetaan rajaa oletuksesta (5).
+max-args=8
+# stream_pipeline pitää kirjanpitoa useasta SSE-muuttujaista — nostetaan rajaa.
+max-locals=25
+max-statements=65

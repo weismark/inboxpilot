@@ -1,0 +1,51 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: #f3f4f6;
+  color: #111827;
+  line-height: 1.5;
+}
+
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+@media (max-width: 640px) {
+  main {
+    padding: 1.25rem 1rem;
+  }
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.navPill {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4b5563;
+  padding: 0.3125rem 0.875rem;
+  border: 1px solid #d1d5db;
+  border-radius: 9999px;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.navPill:hover {
+  border-color: #6366f1;
+  color: #6366f1;
+  background: #eef2ff;
+}

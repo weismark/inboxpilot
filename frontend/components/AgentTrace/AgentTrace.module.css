@@ -1,0 +1,102 @@
+.wrapper {
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.toggle {
+  width: 100%;
+  background: #F9FAFB;
+  border: none;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.toggle:hover {
+  background: #F3F4F6;
+}
+
+.chevron {
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 1px solid #E5E7EB;
+}
+
+.entry {
+  display: flex;
+  gap: 12px;
+  font-size: 0.82rem;
+}
+
+.statusIcon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  margin-top: 1px;
+}
+
+.iconSuccess {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.iconSkipped {
+  background: #F3F4F6;
+  color: #9CA3AF;
+}
+
+.entryBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.entryHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 3px;
+}
+
+.agentName {
+  font-weight: 600;
+  color: #1E1E2E;
+}
+
+.duration {
+  font-size: 0.75rem;
+  color: #9CA3AF;
+  margin-left: auto;
+}
+
+.entryDetail {
+  color: #6B7280;
+  line-height: 1.5;
+}
+
+.skippedReason {
+  color: #9CA3AF;
+  font-style: italic;
+}

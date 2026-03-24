@@ -1,0 +1,274 @@
+.panel {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--card-bg);
+  margin-top: 1rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  text-align: left;
+  gap: 0.5rem;
+  transition: background 0.15s;
+}
+
+.header:hover {
+  background: rgba(99, 102, 241, 0.06);
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.headerTitles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.headerAgents {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.agentChipDraft {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #6366f1;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 4px;
+  padding: 0.1rem 0.45rem;
+}
+
+.agentChipReview {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #a855f7;
+  background: rgba(168, 85, 247, 0.1);
+  border-radius: 4px;
+  padding: 0.1rem 0.45rem;
+}
+
+.agentArrow {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  font-weight: 600;
+}
+
+.headerSub {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.liveDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: pulse 1.2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.8); }
+}
+
+.meta {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.chevron {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  transition: transform 0.2s;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.chevronUp {
+  transform: rotate(180deg);
+}
+
+/* ── Body ─────────────────────────────────────────────────────────────────── */
+
+.body {
+  padding: 0 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ── Message bubbles ──────────────────────────────────────────────────────── */
+
+.message {
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.draft {
+  background: rgba(99, 102, 241, 0.08);
+  border-left: 3px solid #6366f1;
+  margin-right: 1.5rem;
+}
+
+.review {
+  background: rgba(168, 85, 247, 0.08);
+  border-left: 3px solid #a855f7;
+  margin-left: 1.5rem;
+}
+
+.msgHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.agentName {
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+}
+
+.draft .agentName { color: #6366f1; }
+.review .agentName { color: #a855f7; }
+
+.turnLabel {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  background: rgba(0,0,0,0.06);
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+}
+
+.approved {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+}
+
+.rejected {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+}
+
+.feedback {
+  margin-bottom: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.feedbackLabel {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #ef4444;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.feedbackText {
+  font-size: 0.8125rem;
+  color: #1f2937;
+  line-height: 1.5;
+}
+
+.draftSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.draftLabel {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #9ca3af;
+}
+
+.content {
+  margin: 0;
+  color: #4b5563;
+  white-space: pre-wrap;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.expandBtn {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  padding: 0.1rem 0;
+  font-size: 0.75rem;
+  color: #6366f1;
+  cursor: pointer;
+  font-family: inherit;
+  opacity: 0.8;
+}
+
+.expandBtn:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .draft  { margin-right: 0.375rem; }
+  .review { margin-left:  0.375rem; }
+}
+
+/* ── Typing indicator ─────────────────────────────────────────────────────── */
+
+.typingRow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0.25rem 0.5rem;
+}
+
+.typingDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-secondary);
+  animation: typing 1.2s ease-in-out infinite;
+}
+
+.typingDot:nth-child(2) { animation-delay: 0.2s; }
+.typingDot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+  0%, 80%, 100% { opacity: 0.3; transform: translateY(0); }
+  40%           { opacity: 1;   transform: translateY(-4px); }
+}
