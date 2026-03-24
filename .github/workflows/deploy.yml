@@ -1,4 +1,4 @@
-name: Deploy InboxPilot to Ubuntu Server
+name: Deploy InboxPilot app to Ubuntu Server
 
 on:
     push:
