@@ -12,7 +12,7 @@ base=/srv/netcup/$app
 releases=$base/releases
 current=$base/current
 candidate=$releases/$version
-marker=/etc/netcup/$app-test-target
+marker=/etc/netcup/$app-production-target
 unit=$app-netcup.service
 
 [[ "$(id -un)" == "$account" && "$target" =~ ^[0-9a-f]{64}$ &&
@@ -23,7 +23,7 @@ for path in /srv/netcup /etc/netcup; do
 done
 [[ -f "$marker" && "$(realpath -e "$marker")" == "$marker" &&
    "$(stat -c '%U:%G:%a' "$marker")" == root:root:644 &&
-   "$(cat "$marker")" == "$(printf '%s\n%s\n%s' "$target" "$base" test)" ]] ||
+   "$(cat "$marker")" == "$(printf '%s\n%s\n%s' "$target" "$base" production)" ]] ||
   fail "Netcup target marker is incorrect."
 for path in "$base" "$releases"; do
   [[ -d "$path" && "$(realpath -e "$path")" == "$path" &&
@@ -78,7 +78,6 @@ point_current_at() {
 
 request() {
   curl --fail --silent --show-error --max-time 10 \
-    --cacert /etc/netcup/wisemancodes-test-ca.pem \
     --resolve www.wisemancodes.com:443:127.0.0.1 "https://www.wisemancodes.com$1"
 }
 
