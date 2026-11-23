@@ -1,42 +1,71 @@
-name: Deploy InboxPilot to Netcup
+name: Deploy InboxPilot to Netcup production
 
+# Julkaisee jokaisen master-haaran pushin Netcupin tuotantoon. Käyttöönotto vaatii
+# repo-muuttujan NETCUP_PRODUCTION_DEPLOY=enabled ja Environmentin netcup-production.
+# Manuaalinen ajo julkaisee master-haaran kärjen tai annetun aiemman master-commitin (rollback).
 on:
+  push:
+    branches: [master]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
   workflow_dispatch:
+    inputs:
+      sha:
+        description: 'Aiemman master-commitin koko SHA (tyhjä = haaran kärki)'
+        required: false
+        default: ''
 
 permissions:
   contents: read
 
 concurrency:
-  group: inboxpilot-netcup-test
+  group: inboxpilot-netcup-production
   cancel-in-progress: false
 
 jobs:
   deploy:
+    if: github.repository == 'weismark/inboxpilot' && vars.NETCUP_PRODUCTION_DEPLOY == 'enabled'
     runs-on: ubuntu-24.04
-    environment: netcup-test
+    environment: netcup-production
     timeout-minutes: 30
     steps:
-      - name: Check approved Netcup revision
+      - name: Resolve production revision
+        id: revision
         shell: bash
         env:
-          NETCUP_APPROVED_SHA: ${{ vars.NETCUP_APPROVED_SHA }}
+          REQUESTED_SHA: ${{ inputs.sha }}
         run: |
-          [[ "$GITHUB_REF" == refs/heads/feature/netcup-deployment &&
-             "$NETCUP_APPROVED_SHA" =~ ^[0-9a-f]{40}$ &&
-             "$NETCUP_APPROVED_SHA" == "$GITHUB_SHA" ]] ||
-            { echo "::error::This revision is not approved for Netcup."; exit 1; }
+          [[ "$GITHUB_REF" == refs/heads/master ]] ||
+            { echo "::error::Only master deploys to Netcup production."; exit 1; }
+          sha=${REQUESTED_SHA:-$GITHUB_SHA}
+          [[ "$sha" =~ ^[0-9a-f]{40}$ ]] || { echo "::error::Expected a full commit SHA."; exit 1; }
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
 
-      - name: Check out approved revision
+      - name: Check out production revision
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ steps.revision.outputs.sha }}
+          fetch-depth: 0
           persist-credentials: false
+
+      - name: Check revision belongs to master
+        shell: bash
+        env:
+          NETCUP_DEPLOY_SHA: ${{ steps.revision.outputs.sha }}
+        run: |
+          if [[ "$(git rev-parse HEAD)" != "$NETCUP_DEPLOY_SHA" ]] ||
+             ! git merge-base --is-ancestor "$NETCUP_DEPLOY_SHA" origin/master; then
+            echo "::error::Revision is not part of master."; exit 1
+          fi
+          echo "Deploying $NETCUP_DEPLOY_SHA" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Set up Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: '22.23.5'
           package-manager-cache: false
+
       - name: Build frontend for its Netcup route
         working-directory: frontend
         shell: bash
@@ -50,6 +79,7 @@ jobs:
       - name: Deploy and verify Netcup release
         shell: bash
         env:
+          NETCUP_DEPLOY_SHA: ${{ steps.revision.outputs.sha }}
           NETCUP_DEPLOY_HOST: ${{ secrets.NETCUP_DEPLOY_HOST }}
           NETCUP_HOST_PUBLIC_KEY: ${{ secrets.NETCUP_HOST_PUBLIC_KEY }}
           NETCUP_DEPLOY_SSH_KEY: ${{ secrets.NETCUP_DEPLOY_SSH_KEY }}
