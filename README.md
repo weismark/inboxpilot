@@ -50,7 +50,7 @@ This project was built specifically to demonstrate **Microsoft Agent Framework**
 
 | Layer | Technology |
 |-------|-----------|
-| AI agents | Microsoft Agent Framework (`agent-framework-core`) + OpenAI `gpt-5-nano` |
+| AI agents | Microsoft Agent Framework (`agent-framework-core`) + OpenAI `gpt-6-luna` |
 | Backend | Python 3.12, FastAPI, Pydantic v2, slowapi |
 | Streaming | Server-Sent Events (`StreamingResponse`) |
 | Frontend | Next.js 15 (App Router), TypeScript, CSS Modules |
@@ -136,7 +136,7 @@ Open [http://localhost:3000/inboxpilot](http://localhost:3000/inboxpilot).
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `OPENAI_API_KEY` | OpenAI API key (required) | — |
-| `OPENAI_MODEL` | Model to use | `gpt-5-nano` |
+| `OPENAI_MODEL` | Model to use | `gpt-6-luna` |
 | `ALLOWED_ORIGINS` | Comma-separated CORS origins | `http://localhost:3000` |
 | `DEBUG` | Enable debug logging | — |
 

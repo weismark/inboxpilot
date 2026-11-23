@@ -36,7 +36,7 @@ def load_knowledge(agent_name: str) -> str:
 def build_agent(name: str, instructions: str) -> Agent:
     """Rakentaa Agent Frameworkin Agent-olion OpenAI-providerilla."""
     client = OpenAIChatClient(
-        model_id=os.environ.get("OPENAI_MODEL", "gpt-5-nano"),
+        model_id=os.environ.get("OPENAI_MODEL", "gpt-6-luna"),
         api_key=os.environ["OPENAI_API_KEY"],
     )
     return client.as_agent(

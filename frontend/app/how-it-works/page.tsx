@@ -15,8 +15,7 @@ export default function HowItWorksPage() {
           <strong>Microsoft Agent Frameworkin</strong> käytännön soveltamista.
           Jokainen analyysivaihe on oma itsenäinen agenttinsa, jotka framework
           koordinoi yhtenäiseksi pipelineksi. Mallina on käytössä OpenAI:n{' '}
-          <strong>gpt-5-nano</strong>, joka on kustannustehokas valinta
-          toistuviin strukturoituihin tehtäviin etenkin demoissa.
+          <strong>gpt-6-luna</strong>.
         </p>
       </div>
 
@@ -120,7 +119,7 @@ export default function HowItWorksPage() {
             <span className={styles.layerLabel}>OpenAI</span>
             <div className={styles.layerRow}>
               <div className={`${styles.archChip} ${styles.chipModel}`}>
-                gpt-5-nano
+                gpt-6-luna
               </div>
               <div className={styles.archChip}>JSON mode</div>
             </div>
@@ -150,7 +149,7 @@ from agent_framework.openai import OpenAIChatClient, OpenAIChatOptions
 
 def build_agent(name: str, instructions: str) -> Agent:
     client = OpenAIChatClient(
-        model_id=os.environ.get("OPENAI_MODEL", "gpt-5-nano"),
+        model_id=os.environ.get("OPENAI_MODEL", "gpt-6-luna"),
         api_key=os.environ["OPENAI_API_KEY"],
     )
     return client.as_agent(name=name, instructions=instructions)
